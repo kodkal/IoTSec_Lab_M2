@@ -66,20 +66,34 @@ def login():
         # VULNERABILITY #6: SQL Injection
         conn = sqlite3.connect('iot_temp.db')
         c = conn.cursor()
-        query = f"SELECT * FROM users WHERE username = '{username}' AND password = '{password}'"
-        c.execute(query)
-        user = c.fetchone()
-        conn.close()
         
-        if user:
-            # VULNERABILITY #7: Session token predictable
-            token = hashlib.md5(username.encode()).hexdigest()
-            resp = make_response(jsonify({'status': 'success', 'token': token}))
-            # VULNERABILITY #8: No secure flag on cookie
-            resp.set_cookie('auth_token', token, httponly=False)
-            return resp
-        else:
-            return jsonify({'status': 'failed'}), 401
+        # Build the vulnerable query
+        query = f"SELECT * FROM users WHERE username = '{username}' AND password = '{password}'"
+        
+        # Log for debugging
+        print(f"SQL Query: {query}")
+        
+        try:
+            c.execute(query)
+            user = c.fetchone()
+            
+            if user:
+                # VULNERABILITY #7: Session token predictable
+                token = hashlib.md5(str(user[1]).encode()).hexdigest()  # Use actual username from DB
+                resp = make_response(jsonify({'status': 'success', 'token': token, 'message': f'Welcome {user[1]}!'}))
+                # VULNERABILITY #8: No secure flag on cookie
+                resp.set_cookie('auth_token', token, httponly=False)
+                conn.close()
+                return resp
+            else:
+                conn.close()
+                return jsonify({'status': 'failed', 'message': 'Invalid credentials'}), 401
+                
+        except sqlite3.Error as e:
+            print(f"SQL Error: {e}")
+            conn.close()
+            # Still return failed but log the error for debugging
+            return jsonify({'status': 'failed', 'message': 'Database error'}), 401
     
     return render_template('login.html')
 

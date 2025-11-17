@@ -62,11 +62,17 @@ nmap -p 5000 [YOUR-PI-IP]
 5. **Test Command Injection** - In the command box
 
 ### SQL Injection Test:
-Username: `admin' OR '1'='1`
+**Option 1 (Most Reliable):**
+Username: `admin' OR '1'='1' --`
 Password: `anything`
 
+**Option 3 (Comment style):**
+Username: `admin' /*`
+Password: `*/ OR '1'='1`
+
 ### Command Injection Test:
-In command box: `; cat /etc/passwd`
+In command box: /bin/cat /etc/passwd
+
 
 ## Troubleshooting
 

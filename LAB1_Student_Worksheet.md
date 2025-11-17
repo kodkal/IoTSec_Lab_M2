@@ -32,36 +32,48 @@ Choose one method:
 #### Step 2: Commands to Run ON THE RASPBERRY PI
 Once connected to the Pi (either directly or via SSH):
 
-1. Download the lab files from instructor (method will be provided)
-2. Extract and navigate to lab directory:
-   ```bash
-   # ON THE RASPBERRY PI:
-   tar -xzf IoT_Security_Lab1.tar.gz
-   cd IoT_Security_Lab1_Package
-   ```
-3. Run the setup script:
-   ```bash
-   # ON THE RASPBERRY PI:
-   chmod +x setup.sh
-   ./setup.sh
-   ```
-4. Start the application:
-   ```bash
-   # ON THE RASPBERRY PI:
-   python3 vulnerable_iot_app.py
-   ```
-5. Find your Raspberry Pi's IP address:
-   ```bash
-   # ON THE RASPBERRY PI:
-   hostname -I | awk '{print $1}'
-   
-   # Alternative methods:
-   ip addr show | grep "inet "
-   ifconfig | grep "inet "
-   ```
-   Your IP will likely be something like `192.168.1.X` or `10.0.0.X`
+##### Option A: Clone from GitHub (Recommended)
+```bash
+# ON THE RASPBERRY PI:
+cd ~
+git clone https://github.com/kodkal/IoTSec_Lab_M2.git
+cd IoTSec_Lab_M2
 
-#### Step 3: Commands to Run FROM YOUR MAC/PC
+# If the repo is private, your instructor will provide access
+# You may need to use: git clone https://TOKEN@github.com/kodkal/IoTSec_Lab_M2.git
+
+# Run the quick setup script
+chmod +x quickstart.sh
+./quickstart.sh
+```
+
+##### Option B: Use Downloaded Package
+```bash
+# ON THE RASPBERRY PI:
+# If instructor provided tar.gz file:
+tar -xzf IoT_Security_Lab1.tar.gz
+cd IoT_Security_Lab1_Package
+
+# Run the setup script:
+chmod +x setup.sh
+./setup.sh
+
+# Start the application:
+python3 vulnerable_iot_app.py
+```
+
+#### Step 3: Find Your Raspberry Pi's IP Address
+```bash
+# ON THE RASPBERRY PI:
+hostname -I | awk '{print $1}'
+
+# Alternative methods:
+ip addr show | grep "inet "
+ifconfig | grep "inet "
+```
+Your IP will likely be something like `192.168.1.X` or `10.0.0.X`
+
+#### Step 4: Commands to Run FROM YOUR MAC/PC
    
 6. Access the web interface from YOUR LAPTOP'S browser:
    - Open Chrome/Firefox/Safari on YOUR Mac/PC
@@ -74,6 +86,15 @@ Once connected to the Pi (either directly or via SSH):
    ping <pi-ip>
    curl http://<pi-ip>:5000
    ```
+
+#### Step 5: Updating the Lab (If Instructor Makes Changes)
+```bash
+# ON THE RASPBERRY PI:
+cd ~/IoTSec_Lab_M2
+git pull                    # Get latest updates
+./reset_lab.sh             # Reset to clean state
+python3 vulnerable_iot_app.py  # Restart application
+```
 
 ---
 
@@ -157,11 +178,22 @@ Find and exploit the following vulnerabilities. Document how you found each one 
   - Vulnerable parameter: _______________________
   - Payload used: _______________________
   - Data extracted: _______________________
+  
+  **Working payloads to try:**
+  - `admin' --` (note the space after dashes!)
+  - `admin' OR '1'='1' --`
+  - `admin' /*` in username, `*/ OR '1'='1` in password
 
 - [ ] **V8: Command Injection**
   - Vulnerable function: _______________________
   - Command executed: _______________________
   - Proof: _______________________
+  
+  **Commands to try (no semicolon needed):**
+  - `id` (shows user info)
+  - `cat /etc/passwd` (shows password file)
+  - `ls -la` (lists files)
+  - `pwd` (current directory)
 
 #### Configuration Issues
 - [ ] **V9: Insecure Network Services**
