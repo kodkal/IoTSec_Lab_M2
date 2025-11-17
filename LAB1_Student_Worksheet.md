@@ -18,38 +18,61 @@
 - Terminal access
 
 ### Setup Instructions
-1. Connect to your Raspberry Pi via SSH or directly
-2. Download the lab files from the instructor
+
+#### Step 1: Connect to Your Raspberry Pi
+Choose one method:
+- **Physical Access**: Use monitor & keyboard connected to Pi
+- **SSH from your laptop/Mac**: 
+  ```bash
+  # From your Mac/PC terminal:
+  ssh pi@raspberrypi.local
+  # Default password is usually: raspberry
+  ```
+
+#### Step 2: Commands to Run ON THE RASPBERRY PI
+Once connected to the Pi (either directly or via SSH):
+
+1. Download the lab files from instructor (method will be provided)
+2. Extract and navigate to lab directory:
+   ```bash
+   # ON THE RASPBERRY PI:
+   tar -xzf IoT_Security_Lab1.tar.gz
+   cd IoT_Security_Lab1_Package
+   ```
 3. Run the setup script:
    ```bash
+   # ON THE RASPBERRY PI:
    chmod +x setup.sh
    ./setup.sh
    ```
 4. Start the application:
    ```bash
+   # ON THE RASPBERRY PI:
    python3 vulnerable_iot_app.py
    ```
 5. Find your Raspberry Pi's IP address:
    ```bash
-   # Method 1: If you're on the Pi directly
+   # ON THE RASPBERRY PI:
    hostname -I | awk '{print $1}'
    
-   # Method 2: Show all network interfaces
+   # Alternative methods:
    ip addr show | grep "inet "
-   
-   # Method 3: Alternative command
    ifconfig | grep "inet "
    ```
    Your IP will likely be something like `192.168.1.X` or `10.0.0.X`
+
+#### Step 3: Commands to Run FROM YOUR MAC/PC
    
-6. Access the web interface from any browser on the same network:
-   - Main page: `http://<pi-ip>:5000`
+6. Access the web interface from YOUR LAPTOP'S browser:
+   - Open Chrome/Firefox/Safari on YOUR Mac/PC
+   - Navigate to: `http://<pi-ip>:5000`
    - Example: `http://192.168.1.105:5000`
    
-7. Verify the application is running:
+7. Verify connectivity from YOUR LAPTOP:
    ```bash
-   # Check if the port is listening
-   netstat -tln | grep 5000
+   # FROM YOUR MAC/PC terminal:
+   ping <pi-ip>
+   curl http://<pi-ip>:5000
    ```
 
 ---

@@ -15,37 +15,63 @@ This lab provides a hands-on introduction to IoT security vulnerabilities throug
 
 ### Installation
 
-1. **Clone or download the lab files**
+#### Step 1: Connect to Your Raspberry Pi
+First, connect to your Raspberry Pi using one of these methods:
+
+**Option A: Direct Connection (Monitor & Keyboard)**
+- Connect a monitor and keyboard directly to the Pi
+- Login with default credentials (usually pi/raspberry)
+
+**Option B: SSH from Your Mac/PC**
 ```bash
+# From your Mac terminal:
+ssh pi@raspberrypi.local
+# or if you know the IP:
+ssh pi@192.168.1.105
+```
+
+#### Step 2: On the Raspberry Pi - Download Lab Files
+```bash
+# These commands run ON THE RASPBERRY PI, not your Mac!
+
 # Create working directory
 mkdir ~/iot_security_lab1
 cd ~/iot_security_lab1
+
+# Download the lab files (your instructor will provide the method)
+# Option 1: If provided via USB
+# Option 2: If provided via network share
+# Option 3: If provided via download link:
+wget [instructor-provided-url]/IoT_Security_Lab1.tar.gz
+tar -xzf IoT_Security_Lab1.tar.gz
+cd IoT_Security_Lab1_Package
 ```
 
-2. **Run automated setup**
+#### Step 3: On the Raspberry Pi - Run Setup
 ```bash
+# Still on the Raspberry Pi:
 chmod +x setup.sh
 ./setup.sh
 ```
 
 Or manually:
-
 ```bash
-# Install dependencies
+# Install dependencies (on the Pi)
 pip3 install -r requirements.txt
 
-# Initialize the application
+# Start the application (on the Pi)
 python3 vulnerable_iot_app.py
 ```
 
-3. **Find your Raspberry Pi's IP address**
+#### Step 4: On the Raspberry Pi - Find IP Address
 ```bash
 # On the Pi itself:
 hostname -I | awk '{print $1}'
+# This will show something like: 192.168.1.105
 ```
 *See [NETWORK_DISCOVERY_GUIDE.md](NETWORK_DISCOVERY_GUIDE.md) for more methods*
 
-4. **Access the application**
+#### Step 5: From Your Mac/PC - Access the Application
 - Web Interface: `http://<device-ip>:5000`
 - API Endpoint: `http://<device-ip>:5000/api/temperature`
 - Admin Panel: `http://<device-ip>:5000/login`

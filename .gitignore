@@ -1,0 +1,52 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+.env
+
+# Database
+*.db
+*.sqlite
+*.sqlite3
+
+# Logs
+*.log
+/tmp/
+logs/
+
+# Backups
+*.tar.gz
+*.zip
+backup_*.tar.gz
+/backup/
+
+# Student work
+exploit*.py
+poc*.py
+payload*.txt
+extracted_*.txt
+student_*.py
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.bak
+*.old
+
+# Test outputs
+test_results/
+scan_results/
