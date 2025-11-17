@@ -1,5 +1,17 @@
 # Quick Reference Card - IoT Security Lab 1
 
+## Finding Your Raspberry Pi IP
+```bash
+# If you're on the Pi:
+hostname -I | awk '{print $1}'
+
+# From another computer, scan network:
+nmap -p 5000 192.168.1.0/24 --open
+
+# Look for hostname:
+ping raspberrypi.local
+```
+
 ## Default Credentials
 ```
 Username: admin

@@ -29,7 +29,28 @@
    ```bash
    python3 vulnerable_iot_app.py
    ```
-5. Access the web interface at: `http://<pi-ip>:5000`
+5. Find your Raspberry Pi's IP address:
+   ```bash
+   # Method 1: If you're on the Pi directly
+   hostname -I | awk '{print $1}'
+   
+   # Method 2: Show all network interfaces
+   ip addr show | grep "inet "
+   
+   # Method 3: Alternative command
+   ifconfig | grep "inet "
+   ```
+   Your IP will likely be something like `192.168.1.X` or `10.0.0.X`
+   
+6. Access the web interface from any browser on the same network:
+   - Main page: `http://<pi-ip>:5000`
+   - Example: `http://192.168.1.105:5000`
+   
+7. Verify the application is running:
+   ```bash
+   # Check if the port is listening
+   netstat -tln | grep 5000
+   ```
 
 ---
 

@@ -38,7 +38,14 @@ pip3 install -r requirements.txt
 python3 vulnerable_iot_app.py
 ```
 
-3. **Access the application**
+3. **Find your Raspberry Pi's IP address**
+```bash
+# On the Pi itself:
+hostname -I | awk '{print $1}'
+```
+*See [NETWORK_DISCOVERY_GUIDE.md](NETWORK_DISCOVERY_GUIDE.md) for more methods*
+
+4. **Access the application**
 - Web Interface: `http://<device-ip>:5000`
 - API Endpoint: `http://<device-ip>:5000/api/temperature`
 - Admin Panel: `http://<device-ip>:5000/login`
@@ -57,7 +64,9 @@ iot_security_lab1/
 ├── config.ini                # Exposed configuration
 ├── network_scan.py           # Testing utility
 ├── LAB1_Student_Worksheet.md # Student assignment
-└── LAB1_Instructor_Guide.md  # Teaching guide (INSTRUCTORS ONLY)
+├── LAB1_Instructor_Guide.md  # Teaching guide (INSTRUCTORS ONLY)
+├── NETWORK_DISCOVERY_GUIDE.md # How to find your Pi's IP
+└── QUICK_REFERENCE.md        # Command cheat sheet
 ```
 
 ## Lab Objectives

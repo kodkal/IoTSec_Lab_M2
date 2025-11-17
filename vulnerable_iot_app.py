@@ -171,5 +171,30 @@ def after_request(response):
 
 if __name__ == '__main__':
     init_db()
+    
+    # Display startup information
+    import socket
+    hostname = socket.gethostname()
+    try:
+        # Get IP address
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.connect(("8.8.8.8", 80))
+        ip_address = s.getsockname()[0]
+        s.close()
+    except:
+        ip_address = "127.0.0.1"
+    
+    print("\n" + "="*50)
+    print("🌡️  Vulnerable IoT Temperature Monitor Starting...")
+    print("="*50)
+    print(f"Access the application at:")
+    print(f"  Local: http://localhost:5000")
+    print(f"  Network: http://{ip_address}:5000")
+    print(f"\nDefault credentials:")
+    print(f"  Username: admin")
+    print(f"  Password: 123456")
+    print("\n⚠️  WARNING: This application is intentionally vulnerable!")
+    print("="*50 + "\n")
+    
     # VULNERABILITY #16: Exposed on all interfaces
     app.run(host='0.0.0.0', port=5000, debug=True)
