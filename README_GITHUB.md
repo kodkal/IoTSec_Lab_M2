@@ -87,8 +87,8 @@ http://[PI-IP]:5000
 - And more...
 
 ## Default Credentials
-- Username: `admin`
-- Password: `123456`
+- Username: `a******`
+- Password: `1******`
 
 ## Key URLs
 - Dashboard: `http://[pi-ip]:5000/`

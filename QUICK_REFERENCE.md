@@ -14,8 +14,8 @@ ping raspberrypi.local
 
 ## Default Credentials
 ```
-Username: admin
-Password: 123456
+Username: a**********
+Password: 1**********
 ```
 
 ## Useful URLs
@@ -120,7 +120,7 @@ Object.keys(window)
 ```python
 import requests
 r = requests.post('http://<ip>:5000/login',
-    data={'username':'admin', 'password':'123456'})
+    data={'username':'a*******', 'password':'1******'})
 print(r.text)
 ```
 
@@ -196,7 +196,7 @@ Look for missing:
 
 ## Quick Wins
 1. Check HTML comments
-2. Try admin/123456
+2. Try something that starts with an "a" and a password that starts with a 1
 3. Look at browser console
 4. Check /api/settings
 5. View localStorage

@@ -56,7 +56,7 @@ nmap -p 5000 [YOUR-PI-IP]
 
 ### Easy Wins to Try First:
 1. **View Page Source** - Check HTML comments
-2. **Try Default Login** - admin/123456
+2. **Try Guessing the Default Login** - a_____ / 1______
 3. **Check Browser Console** - Press F12
 4. **Look at /api/settings** - Exposed data?
 5. **Test Command Injection** - In the command box
