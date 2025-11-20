@@ -205,8 +205,8 @@ if __name__ == '__main__':
     print(f"  Local: http://localhost:5000")
     print(f"  Network: http://{ip_address}:5000")
     print(f"\nDefault credentials:")
-    print(f"  Username: admin")
-    print(f"  Password: 123456")
+    print(f"  Username: a*****")
+    print(f"  Password: 1*****")
     print("\n⚠️  WARNING: This application is intentionally vulnerable!")
     print("="*50 + "\n")
     
