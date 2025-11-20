@@ -12,7 +12,8 @@ echo ""
 if [ ! -f /proc/device-tree/model ] || ! grep -q "Raspberry Pi" /proc/device-tree/model 2>/dev/null; then
     echo "⚠️  Warning: This doesn't appear to be a Raspberry Pi."
     echo "   The lab is designed for Raspberry Pi but may work on other Linux systems."
-    read -p "   Continue anyway? (y/n): " -n 1 -r
+    echo -n "   Continue anyway? (y/n): "
+    read REPLY
     echo
     if [[ ! $REPLY =~ ^[Yy]$ ]]; then
         exit 1
@@ -91,15 +92,16 @@ echo "Then access it from your computer's browser at:"
 echo ""
 echo "  http://$IP_ADDRESS:5000"
 echo ""
-echo "Find the default login credentials:"
-echo "  Username: a_____"
-echo "  Password: 1_____"
+echo "Default login credentials:"
+echo "  Username: admin"
+echo "  Password: 123456"
 echo ""
 echo "================================================"
 echo ""
 
 # Ask if they want to start now
-read -p "Start the application now? (y/n): " -n 1 -r
+echo -n "Start the application now? (y/n): "
+read REPLY
 echo
 if [[ $REPLY =~ ^[Yy]$ ]]; then
     echo ""
