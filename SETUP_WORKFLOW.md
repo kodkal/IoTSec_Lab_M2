@@ -76,7 +76,8 @@ python3 vulnerable_iot_app.py
 
 #### Open New Terminal Window (Cmd+N or Ctrl+Shift+N)
 ```bash
-# Test connection to the Pi
+# Test connection to the Pi --
+## YOUR IP ADDRESS WILL MOST LIKELY BE DIFFERENT THAN THIS
 ping 192.168.1.105
 
 # Test the web application
