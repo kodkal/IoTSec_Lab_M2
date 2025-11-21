@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>IoT Temperature Monitor</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+        .container {
+            background: white;
+            color: #333;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 800px;
+            margin: 0 auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        .temp-display {
+            font-size: 48px;
+            text-align: center;
+            margin: 20px 0;
+            color: #667eea;
+        }
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+        }
+        button:hover {
+            background: #764ba2;
+        }
+        .info-box {
+            background: #f0f0f0;
+            padding: 15px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: monospace;
+        }
+        .warning {
+            background: #ffcccc;
+            color: #990000;
+            padding: 10px;
+            border-radius: 5px;
+            margin: 10px 0;
+        }
+        input {
+            padding: 8px;
+            margin: 5px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🌡️ Smart Home Temperature Monitor</h1>
+        
+        <!-- VULNERABILITY: Version disclosure -->
+        <p style="text-align: right; color: #999; font-size: 12px;">Version 1.0.0 | Device: DEVICE_001</p>
+        
+        <div class="temp-display" id="temperature">--°C</div>
+        <div style="text-align: center; color: #666;" id="timestamp">Loading...</div>
+        
+        <div style="text-align: center; margin: 20px;">
+            <button onclick="updateTemperature()">Refresh Temperature</button>
+            <button onclick="showSettings()">View Settings</button>
+            <button onclick="showLogs()">System Logs</button>
+        </div>
+        
+        <div class="info-box">
+            <h3>Quick Command Execute</h3>
+            <input type="text" id="command" placeholder="Enter system command" style="width: 60%;">
+            <button onclick="executeCommand()">Execute</button>
+            <div id="commandOutput" style="margin-top: 10px;"></div>
+        </div>
+        
+        <div class="info-box" id="settings" style="display: none;">
+            <h3>Device Settings</h3>
+            <div id="settingsContent">Loading...</div>
+        </div>
+        
+        <div class="info-box" id="debugInfo" style="display: none;">
+            <h3>Debug Information</h3>
+            <div id="debugContent"></div>
+        </div>
+        
+        <!-- VULNERABILITY: Sensitive info in HTML comments -->
+        <!-- TODO: Remove before production
+        Default credentials: admin/123456
+        API Endpoint: /api/temperature
+        Debug mode: enabled
+        SSH: pi@raspberrypi.local password: raspberry
+        -->
+        
+        <div style="margin-top: 20px; text-align: center;">
+            <a href="/login">Admin Login</a> | 
+            <a href="/api/temperature">API Endpoint</a> |
+            <a href="/logs">View Logs</a>
+        </div>
+    </div>
+    
+    <script>
+        // VULNERABILITY: API key exposed in JavaScript
+        const API_KEY = "AKIAIOSFODNN7EXAMPLE";
+        
+        function updateTemperature() {
+            fetch('/api/temperature')
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('temperature').innerText = data.temperature + '°C';
+                    document.getElementById('timestamp').innerText = 'Last updated: ' + data.timestamp;
+                    
+                    // VULNERABILITY: Sensitive data logged to console
+                    console.log('Full API Response:', data);
+                    console.log('Debug Info:', data.debug_info);
+                });
+        }
+        
+        function showSettings() {
+            fetch('/api/settings')
+                .then(response => response.json())
+                .then(data => {
+                    // VULNERABILITY: Displaying sensitive information
+                    document.getElementById('settingsContent').innerHTML = `
+                        <p><strong>API Key:</strong> ${data.api_key}</p>
+                        <p><strong>Device ID:</strong> ${data.device_id}</p>
+                        <p><strong>WiFi SSID:</strong> ${data.wifi_ssid}</p>
+                        <p><strong>WiFi Password:</strong> ${data.wifi_password}</p>
+                        <p><strong>MQTT Broker:</strong> ${data.mqtt_broker}:${data.mqtt_port}</p>
+                    `;
+                    document.getElementById('settings').style.display = 'block';
+                });
+        }
+        
+        function executeCommand() {
+            const cmd = document.getElementById('command').value;
+            
+            // VULNERABILITY: No input validation
+            fetch('/api/command', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({command: cmd})
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById('commandOutput').innerHTML = 
+                    '<pre>' + (data.output || data.error) + '</pre>';
+            });
+        }
+        
+        function showLogs() {
+            window.location.href = '/logs';
+        }
+        
+        // Auto-update temperature every 10 seconds
+        setInterval(updateTemperature, 10000);
+        updateTemperature();
+        
+        // VULNERABILITY: Sensitive data in localStorage
+        localStorage.setItem('device_api_key', API_KEY);
+        localStorage.setItem('admin_password', '123456');
+    </script>
+</body>
+</html>
