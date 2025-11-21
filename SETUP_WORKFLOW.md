@@ -44,7 +44,8 @@ mkdir ~/iot_security_lab1
 cd ~/iot_security_lab1
 
 # 2. Get the lab files (instructor will provide method)
-# Example: copy from USB, download, or extract provided file
+git clone https://github.com/kodkal/IoTSec_Lab_M2.git
+cd IoTSec_Lab_M2
 
 # 3. Extract lab files
 tar -xzf IoT_Security_Lab1.tar.gz
@@ -75,7 +76,8 @@ python3 vulnerable_iot_app.py
 
 #### Open New Terminal Window (Cmd+N or Ctrl+Shift+N)
 ```bash
-# Test connection to the Pi
+# Test connection to the Pi --
+## YOUR IP ADDRESS WILL MOST LIKELY BE DIFFERENT THAN THIS
 ping 192.168.1.105
 
 # Test the web application
