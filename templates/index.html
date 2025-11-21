@@ -36,6 +36,13 @@
         button:hover {
             background: #764ba2;
         }
+        button.locked {
+            background: #999;
+            cursor: not-allowed;
+        }
+        button.locked:hover {
+            background: #999;
+        }
         .info-box {
             background: #f0f0f0;
             padding: 15px;
@@ -44,11 +51,12 @@
             font-family: monospace;
         }
         .warning {
-            background: #ffcccc;
-            color: #990000;
+            background: #fff3cd;
+            color: #856404;
             padding: 10px;
             border-radius: 5px;
             margin: 10px 0;
+            border: 1px solid #ffeeba;
         }
         input {
             padding: 8px;
@@ -56,59 +64,129 @@
             border: 1px solid #ddd;
             border-radius: 4px;
         }
+        .auth-status {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            padding: 10px;
+            background: #f8d7da;
+            color: #721c24;
+            border-radius: 5px;
+            border: 1px solid #f5c6cb;
+        }
+        .auth-status.authenticated {
+            background: #d4edda;
+            color: #155724;
+            border-color: #c3e6cb;
+        }
+        .lock-icon {
+            color: #999;
+            font-size: 20px;
+        }
     </style>
 </head>
 <body>
+    <div class="auth-status" id="authStatus">
+        🔒 Not Authenticated | <a href="/login">Login</a>
+    </div>
+    
     <div class="container">
         <h1>🌡️ Smart Home Temperature Monitor</h1>
         
         <!-- VULNERABILITY: Version disclosure -->
-        <p style="text-align: right; color: #999; font-size: 12px;">Version 1.0.0 | Device: DEVICE_001</p>
+        <p style="text-align: right; color: #999; font-size: 12px;">Version 2.0.0 | Device: DEVICE_001</p>
         
         <div class="temp-display" id="temperature">--°C</div>
         <div style="text-align: center; color: #666;" id="timestamp">Loading...</div>
         
         <div style="text-align: center; margin: 20px;">
             <button onclick="updateTemperature()">Refresh Temperature</button>
-            <button onclick="showSettings()">View Settings</button>
+            <button onclick="showSettings()" id="settingsBtn" class="locked" title="Login required">
+                🔒 View Settings
+            </button>
             <button onclick="showLogs()">System Logs</button>
         </div>
         
+        <div class="warning" id="authWarning" style="display: none;">
+            ⚠️ <strong>Authentication Required!</strong><br>
+            Some features require login. Try default credentials or SQL injection at <a href="/login">/login</a>
+        </div>
+        
         <div class="info-box">
-            <h3>Quick Command Execute</h3>
-            <input type="text" id="command" placeholder="Enter system command" style="width: 60%;">
-            <button onclick="executeCommand()">Execute</button>
-            <div id="commandOutput" style="margin-top: 10px;"></div>
+            <h3>Quick Command Execute 🔒</h3>
+            <div id="commandAuth" style="color: #999;">
+                <em>Login required to execute commands</em>
+            </div>
+            <div id="commandInterface" style="display: none;">
+                <input type="text" id="command" placeholder="Enter system command" style="width: 60%;">
+                <button onclick="executeCommand()">Execute</button>
+                <div id="commandOutput" style="margin-top: 10px;"></div>
+            </div>
         </div>
         
         <div class="info-box" id="settings" style="display: none;">
-            <h3>Device Settings</h3>
+            <h3>Device Settings 🔓</h3>
             <div id="settingsContent">Loading...</div>
         </div>
         
-        <div class="info-box" id="debugInfo" style="display: none;">
-            <h3>Debug Information</h3>
-            <div id="debugContent"></div>
+        <div class="info-box">
+            <h3>API Endpoints</h3>
+            <p><strong>Public (No Auth):</strong></p>
+            <ul>
+                <li>✅ <a href="/api/temperature">/api/temperature</a> - Current temperature</li>
+                <li>✅ <a href="/logs">/logs</a> - System logs</li>
+                <li>✅ <a href="/api/status">/api/status</a> - Auth status</li>
+            </ul>
+            <p><strong>Protected (Login Required):</strong></p>
+            <ul>
+                <li>🔒 <a href="/api/settings" onclick="checkAuth(event)">/api/settings</a> - WiFi & Credentials</li>
+                <li>🔒 /api/command - Execute commands</li>
+            </ul>
         </div>
         
         <!-- VULNERABILITY: Sensitive info in HTML comments -->
         <!-- TODO: Remove before production
         Default credentials: admin/123456
-        API Endpoint: /api/temperature
-        Debug mode: enabled
-        SSH: pi@raspberrypi.local password: raspberry
+        SQL Injection: admin' --
+        Token generation: MD5(username)
         -->
         
         <div style="margin-top: 20px; text-align: center;">
             <a href="/login">Admin Login</a> | 
-            <a href="/api/temperature">API Endpoint</a> |
+            <a href="/api/status">Check Auth Status</a> |
             <a href="/logs">View Logs</a>
         </div>
     </div>
     
     <script>
-        // VULNERABILITY: API key exposed in JavaScript
-        const API_KEY = "AKIAIOSFODNN7EXAMPLE";
+        // Check authentication status on load
+        function checkAuthStatus() {
+            const token = getCookie('auth_token');
+            const authStatus = document.getElementById('authStatus');
+            const settingsBtn = document.getElementById('settingsBtn');
+            const commandAuth = document.getElementById('commandAuth');
+            const commandInterface = document.getElementById('commandInterface');
+            
+            if (token && token.length === 32) {
+                authStatus.innerHTML = '🔓 Authenticated | <a href="#" onclick="logout()">Logout</a>';
+                authStatus.className = 'auth-status authenticated';
+                settingsBtn.className = '';
+                settingsBtn.innerHTML = '🔓 View Settings';
+                commandAuth.style.display = 'none';
+                commandInterface.style.display = 'block';
+                
+                // Log to console (vulnerability)
+                console.log('Authenticated with token:', token);
+            } else {
+                console.log('Not authenticated. Try logging in first!');
+            }
+        }
+        
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        }
         
         function updateTemperature() {
             fetch('/api/temperature')
@@ -116,33 +194,55 @@
                 .then(data => {
                     document.getElementById('temperature').innerText = data.temperature + '°C';
                     document.getElementById('timestamp').innerText = 'Last updated: ' + data.timestamp;
-                    
-                    // VULNERABILITY: Sensitive data logged to console
-                    console.log('Full API Response:', data);
-                    console.log('Debug Info:', data.debug_info);
+                    console.log('Temperature data (public):', data);
                 });
         }
         
         function showSettings() {
+            const token = getCookie('auth_token');
+            
+            if (!token) {
+                document.getElementById('authWarning').style.display = 'block';
+                alert('Authentication required! Please login first.');
+                window.location.href = '/login';
+                return;
+            }
+            
             fetch('/api/settings')
                 .then(response => response.json())
                 .then(data => {
-                    // VULNERABILITY: Displaying sensitive information
-                    document.getElementById('settingsContent').innerHTML = `
-                        <p><strong>API Key:</strong> ${data.api_key}</p>
-                        <p><strong>Device ID:</strong> ${data.device_id}</p>
-                        <p><strong>WiFi SSID:</strong> ${data.wifi_ssid}</p>
-                        <p><strong>WiFi Password:</strong> ${data.wifi_password}</p>
-                        <p><strong>MQTT Broker:</strong> ${data.mqtt_broker}:${data.mqtt_port}</p>
-                    `;
-                    document.getElementById('settings').style.display = 'block';
+                    if (data.error) {
+                        alert(data.error + '\n' + (data.hint || ''));
+                        window.location.href = '/login';
+                    } else {
+                        // Display sensitive information
+                        document.getElementById('settingsContent').innerHTML = `
+                            <p><strong>🎉 ${data.message || ''}</strong></p>
+                            <p><strong>API Key:</strong> ${data.api_key}</p>
+                            <p><strong>Device ID:</strong> ${data.device_id}</p>
+                            <p><strong>WiFi SSID:</strong> ${data.wifi_ssid}</p>
+                            <p><strong>WiFi Password:</strong> ${data.wifi_password}</p>
+                            <p><strong>MQTT Broker:</strong> ${data.mqtt_broker}:${data.mqtt_port}</p>
+                            <p><strong>SSH Password:</strong> ${data.ssh_password || 'hidden'}</p>
+                            <p><strong>Root Password:</strong> ${data.root_password || 'hidden'}</p>
+                        `;
+                        document.getElementById('settings').style.display = 'block';
+                        
+                        // Log to console (vulnerability)
+                        console.log('Settings retrieved (authenticated):', data);
+                    }
                 });
         }
         
         function executeCommand() {
             const cmd = document.getElementById('command').value;
+            const token = getCookie('auth_token');
             
-            // VULNERABILITY: No input validation
+            if (!token) {
+                alert('Authentication required for command execution!');
+                return;
+            }
+            
             fetch('/api/command', {
                 method: 'POST',
                 headers: {'Content-Type': 'application/json'},
@@ -150,22 +250,52 @@
             })
             .then(response => response.json())
             .then(data => {
-                document.getElementById('commandOutput').innerHTML = 
-                    '<pre>' + (data.output || data.error) + '</pre>';
+                if (data.error) {
+                    if (data.error.includes('Authentication')) {
+                        alert('Session expired. Please login again.');
+                        window.location.href = '/login';
+                    } else {
+                        document.getElementById('commandOutput').innerHTML = 
+                            '<pre style="color: red;">Error: ' + data.error + '</pre>';
+                    }
+                } else {
+                    document.getElementById('commandOutput').innerHTML = 
+                        '<pre>' + data.output + '</pre>';
+                }
             });
+        }
+        
+        function checkAuth(event) {
+            const token = getCookie('auth_token');
+            if (!token) {
+                event.preventDefault();
+                alert('This endpoint requires authentication. Please login first!');
+                window.location.href = '/login';
+            }
         }
         
         function showLogs() {
             window.location.href = '/logs';
         }
         
+        function logout() {
+            document.cookie = 'auth_token=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;';
+            window.location.reload();
+        }
+        
+        // Check auth status on page load
+        checkAuthStatus();
+        
         // Auto-update temperature every 10 seconds
         setInterval(updateTemperature, 10000);
         updateTemperature();
         
-        // VULNERABILITY: Sensitive data in localStorage
-        localStorage.setItem('device_api_key', API_KEY);
-        localStorage.setItem('admin_password', '123456');
+        // Check API status
+        fetch('/api/status')
+            .then(response => response.json())
+            .then(data => {
+                console.log('API Status:', data);
+            });
     </script>
 </body>
 </html>
