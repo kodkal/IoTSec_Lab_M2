@@ -256,17 +256,5 @@ if __name__ == '__main__':
     except:
         ip_address = "127.0.0.1"
     
-    print("\n" + "="*50)
-    print("🌡️  Vulnerable IoT Temperature Monitor v2")
-    print("="*50)
-    print(f"Access the application at:")
-    print(f"  Local: http://localhost:5000")
-    print(f"  Network: http://{ip_address}:5000")
-    print(f"\nDefault credentials:")
-    print(f"  Username: a...")
-    print(f"  Password: 1...")
-    print(f"\n⚠️  NEW: Settings now require authentication!")
-    print("="*50 + "\n")
-    
     # VULNERABILITY #16: Exposed on all interfaces
     app.run(host='0.0.0.0', port=5000, debug=True)
