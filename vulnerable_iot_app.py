@@ -210,7 +210,7 @@ def logs():
     [2024-01-01 10:10:00] User admin logged in from 192.168.1.50
     [2024-01-01 10:15:00] Accessed protected settings endpoint
     [2024-01-01 10:20:00] Note: /api/settings now requires authentication
-    [2024-01-01 10:25:00] Hint: Use admin/123456 or SQL injection to login
+    [2024-01-01 10:25:00] Hint: Use admin/1..... or SQL injection to login
     """
 
 @app.route('/api/status')
