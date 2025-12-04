@@ -76,7 +76,7 @@ echo "================================================"
 echo "   Network Information"
 echo "================================================"
 IP_ADDRESS=$(hostname -I | awk '{print $1}')
-echo "🌐 Your Raspberry Pi IP address: $IP_ADDRESS"
+echo "🌐 Your IP address: $IP_ADDRESS"
 echo ""
 
 # Create startup command
