@@ -55,7 +55,7 @@ if [[ "$1" == "--soft" ]]; then
         APP_PID=$(pgrep -f vulnerable_iot_app.py)
         echo "Application PID: $APP_PID"
         echo "Application URL: http://$(hostname -I | awk '{print $1}'):5000"
-        echo "Default login: admin / 123456"
+        echo "Default login: a... / 1..."
     else
         echo ""
         echo "❌ Error: Application failed to start!"
